@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Be My Valentine 💖</title>
+
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+<style>
+body{
+  margin:0;
+  background:linear-gradient(to right,#ff9a9e,#fad0c4);
+  font-family:Arial;
+  text-align:center;
+}
+
+/* Boxes for pages */
+.box{
+  background:white;
+  width:90%;
+  max-width:400px;
+  margin:80px auto;
+  padding:30px;
+  border-radius:20px;
+  box-shadow:0 10px 25px rgba(0,0,0,0.2);
+  position:relative;
+}
+
+h2{
+  color:#e91e63;
+  animation:pulse 1.2s infinite alternate;
+}
+
+button{
+  padding:10px 20px;
+  margin:10px;
+  border:none;
+  border-radius:10px;
+  background:#ff4d6d;
+  color:white;
+  font-size:16px;
+  cursor:pointer;
+}
+
+button:hover{
+  transform:scale(1.1);
+}
+
+img{
+  width:100%;
+  border-radius:15px;
+  margin-top:15px;
+}
+
+/* Caption under slideshow images */
+.caption{
+  font-size:18px;
+  color:#e91e63;
+  margin-top:10px;
+  font-weight:bold;
+}
+
+/* Input box style */
+input{
+  padding:10px;
+  width:80%;
+  font-size:16px;
+  margin-top:15px;
+  border-radius:8px;
+  border:1px solid #e91e63;
+  text-align:center;
+}
+
+/* Pulse animation for headings */
+@keyframes pulse{
+  from{transform:scale(1);}
+  to{transform:scale(1.05);}
+}
+
+/* Bounce animation for cartoon images */
+@keyframes bounce{
+  0%, 100%{ transform: translateY(0); }
+  50%{ transform: translateY(-15px); }
+}
+
+.cartoon{
+  width:150px;
+  margin-top:15px;
+  animation:bounce 1.5s infinite;
+}
+</style>
+</head>
+
+<body>
+
+<audio id="music" loop>
+  <source src="song.mp3" type="audio/mp3">
+</audio>
+
+<!-- PAGE 1 -->
+<div class="box" id="page1">
+  <h2>Sravan, will you be my Valentine? 💕</h2>
+  <img src="cartoon1.png" class="cartoon" alt="Cute Cartoon">
+  <button onclick="yes()">Yes</button>
+  <button onmouseover="move(this)">No</button>
+  <p>Don't try to click No 😜</p>
+</div>
+
+<!-- PAGE 2 -->
+<div class="box" id="page2" style="display:none;">
+  <h2>Yaaaahhh! You're my forever Valentine! 💖</h2>
+  <img src="cartoon2.png" class="cartoon" alt="Cute Couple Cartoon">
+  <p>Be My Forever Valentine I want to show you some special moments of us ❤️</p>
+  <button onclick="startSlideshow()">See the special Moments 💌</button>
+</div>
+
+<!-- PAGE 3 SLIDESHOW -->
+<div class="box" id="page3" style="display:none;">
+  <h2>Our forever Memories</h2>
+  <img id="slide" src="photo1.jpg">
+  <div class="caption" id="caption">Just us</div>
+</div>
+
+<!-- PAGE 4 SECRET INPUT -->
+<div class="box" id="typePage" style="display:none;">
+  <h2>Hey handsome! 💕</h2>
+  <p>Type <b>I love you dear</b> to unlock your surprise:</p>
+  <input type="text" id="loveInput" placeholder="Type here">
+  <br>
+  <button onclick="submitSecret()">Submit💖</button>
+</div>
+
+<!-- PAGE 5 LOVE LETTER -->
+<div class="box" id="page4" style="display:none;">
+  <h2>My Secret Love Letter 💌</h2>
+  <img src="rose.jpg" style="width:100px; border-radius:50px;">
+  <img src="cartoon3.png" class="cartoon" alt="Couple Cartoon">
+  <p style="font-size:16px; color:#e91e63; margin-top:15px;">
+    My love, every moment with you is a treasure.<br>
+    Your smile lights up my world and your heart completes mine.<br>
+    I promise to love you forever and always. 💖
+  </p>
+</div>
+
+<script>
+/* YES button function */
+function yes(){
+  document.getElementById("page1").style.display="none";
+  document.getElementById("page2").style.display="block";
+  document.getElementById("music").play();
+
+  confetti({
+    particleCount:150,
+    spread:70,
+    origin:{y:0.6}
+  });
+}
+
+/* Move "No" button randomly */
+function move(btn){
+  let box = document.getElementById("page1").getBoundingClientRect();
+  let maxX = box.width - btn.offsetWidth - 20;
+  let maxY = box.height - btn.offsetHeight - 20;
+
+  btn.style.position="absolute";
+  btn.style.left = Math.random() * maxX + "px";
+  btn.style.top = Math.random() * maxY + "px";
+}
+
+/* Slideshow variables */
+let images = ["photo1.jpg","photo2.jpg","photo3.jpg","photo4.jpg"];
+let captions = ["Just Us","Holding Hands, Holding Hearts ❤️","Our Favorite Pic","Best Dad"];
+let i = 0;
+
+/* Start slideshow */
+function startSlideshow(){
+  document.getElementById("page2").style.display="none";
+  document.getElementById("page3").style.display="block";
+
+  let slideInterval = setInterval(function(){
+    document.getElementById("slide").src = images[i];
+    document.getElementById("caption").innerText = captions[i];
+
+    i++;
+    if(i >= images.length){
+      i = 1;
+    }
+  }, 2000);
+
+  // Move to secret input after slideshow
+  setTimeout(function(){
+    clearInterval(slideInterval);
+    document.getElementById("page3").style.display="none";
+    document.getElementById("typePage").style.display="block";
+  }, images.length * 2000 + 1000);
+}
+
+/* Secret input submit */
+function submitSecret(){
+  let input = document.getElementById("loveInput").value.trim().toLowerCase();
+
+  if(input === "i love you dear"){
+    document.getElementById("typePage").style.display="none";
+    document.getElementById("page4").style.display="block";
+
+    confetti({
+      particleCount:200,
+      spread:90,
+      origin:{y:0.6}
+    });
+
+  } else {
+    alert('Incorrect! Please type "I love you dear"');
+  }
+}
+
+/* Allow Enter key for secret input */
+document.getElementById("loveInput").addEventListener("keypress", function(e){
+  if(e.key === "Enter") submitSecret();
+});
+</script>
+
+</body>
+</html>
